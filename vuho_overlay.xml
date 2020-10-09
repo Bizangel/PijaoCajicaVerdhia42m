@@ -287,10 +287,10 @@
 			<layer name="floor2ui" type="image" url="%VIEWER%/icons/floor2off.png" x="15%" y="28%" align="righttop" scale="0.32" 
 			onclick="switch_floor_ui(2);"  enabled="true" alpha="1" devices="handheld"/>
 			
-			<layer name="hab2ui" type="image" url="%VIEWER%/icons/hab1off.png" x="+75%" y="28%" align="righttop" scale="0.32" 
+			<layer name="hab1ui" type="image" url="%VIEWER%/icons/hab1off.png" x="+75%" y="28%" align="righttop" scale="0.32" 
 			onclick="switch_hab_ui(1);" enabled="true" alpha="1" devices="handheld"/>
 	
-			<layer name="hab3ui" type="image" url="%VIEWER%/icons/hab2off.png" x="+55%" y="28%" align="righttop" scale="0.32" 
+			<layer name="hab2ui" type="image" url="%VIEWER%/icons/hab2off.png" x="+55%" y="28%" align="righttop" scale="0.32" 
 			onclick="switch_hab_ui(2);"  enabled="true" alpha="1" devices="handheld"/>
 			
 			
