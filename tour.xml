@@ -1,0 +1,308 @@
+﻿<krpano version="1.20.6" title="Virtual Tour" showerrors="false" logkey="false">	
+	<include url="skin/vtourskin.xml" if="0"/>
+	
+	
+	<include url="vuho_overlay.xml"/>
+	<include url="helper360.xml"/>
+	
+	<include url="%VIEWER%/toolbox/toolbox.xml" if="0" />
+	<include url="%VIEWER%/plugins/tour_edithelper.xml" if="0" />
+	
+	<events onclick="check_navigation();" if="1"/>
+	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
+	<skin_settings maps="false" maps_type="google" maps_bing_api_key="" maps_google_api_key="" maps_zoombuttons="false" maps_loadonfirstuse="true" gyro="true" gyro_keeplookingdirection="false" webvr="true" webvr_keeplookingdirection="true" webvr_prev_next_hotspots="true" autotour="false" littleplanetintro="false" followmousecontrol="false" title="true" thumbs="true" thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160" thumbs_opened="false" thumbs_text="false" thumbs_dragging="true" thumbs_onhoverscrolling="false" thumbs_scrollbuttons="false" thumbs_scrollindicator="false" thumbs_loop="false" tooltips_buttons="false" tooltips_thumbs="false" tooltips_hotspots="false" tooltips_mapspots="false" deeplinking="false" loadscene_flags="MERGE" loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)" loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)" loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)" loadingtext="loading..." layout_width="100%" layout_maxwidth="814" controlbar_width="-24" controlbar_height="40" controlbar_offset="20" controlbar_offset_closed="-40" controlbar_overlap.no-fractionalscaling="10" controlbar_overlap.fractionalscaling="0" design_skin_images="vtourskin.png" design_bgcolor="0x2D3E50" design_bgalpha="0.8" design_bgborder="0" design_bgroundedge="1" design_bgshadow="0 4 10 0x000000 0.3" design_thumbborder_bgborder="3 0xFFFFFF 1.0" design_thumbborder_padding="2" design_thumbborder_bgroundedge="0" design_text_css="color:#FFFFFF; font-family:Arial;" design_text_shadow="1"/>
+	
+	<action name="print">
+		showlog();
+		trace(" ",%1);
+	</action>
+	
+	<events onkeydown="debugaction();" if="0"/>
+	
+	<action name="debugaction" if="0" >
+		if(keycode == 89, <!-- Y KEY -->
+			change_piso(claro);
+		);
+		if(keycode == 85, <!-- U KEY -->
+			change_piso(oscuro);
+		);
+		if(keycode == 72, <!-- H KEY -->
+			change_hab(1);
+		);
+		
+		if(keycode == 74, <!-- J KEY -->
+			change_hab(2);
+		);
+	</action>
+	
+	<!--
+	    For an alternative skin design either change the <skin_settings> values 
+	    from above or optionally include one of the predefined designs from below.
+	-->
+	<!-- <include url="skin/vtourskin_design_flat_light.xml"  /> -->
+	<!-- <include url="skin/vtourskin_design_glass.xml"       /> -->
+	<!-- <include url="skin/vtourskin_design_ultra_light.xml" /> -->
+	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
+	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
+	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
+	
+	
+	<!-- DEPENDENCIES -->
+	<action name="skin_loadscene" scope="local" args="newscenenameorindex, blendmode">
+		if(webvr.isenabled AND scene.count GT 1,
+			set(hotspot[skin_webvr_prev_scene].visible, false);
+			set(hotspot[skin_webvr_next_scene].visible, false);
+		);
+
+		calc(layer[skin_thumbborder].parent, 'skin_thumb_' + scene[get(newscenenameorindex)].index);
+		layer[skin_thumbs].scrolltocenter(get(scene[get(newscenenameorindex)].thumbx), get(scene[get(newscenenameorindex)].thumby));
+		tour_loadscene(get(scene[get(newscenenameorindex)].name));
+		
+		
+	</action>
+	<display depthmaprendermode="depthmap" />
+	
+	
+	
+	<layer name="stateHolder" keep="true" habstate="1" floorstate="claro"/>
+	
+	<!-- startup action - load the first scene -->
+	<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[3].name); );
+		loadscene(get(startscene), null, MERGE);
+		<!-- Set scene 1 start location -->
+		set(view.tx,1057);
+		set(view.ty,0);
+		set(view.tz,510);
+		
+		
+		
+		tween(view.tx|view.ty|view.tz, calc(image.ox + '|' + image.oy + '|' + image.oz), 2.0, default);	
+		
+		
+		if(startactions !== null, startactions() );
+	</action>
+
+	<!-- Space location of each scene -->
+	<style name="scene_1"  ox="842"    oy="0"   oz="932"   linkedscene="scene_1" autohotspot="true" 
+	allowed="scene_2|scene_3"/>
+	
+	<style name="scene_2"  ox="957"    oy="0"   oz="729"   linkedscene="scene_2" autohotspot="true" 
+	allowed="scene_1|scene_3|scene_5|scene_4"/>
+	
+	<style name="scene_3"  ox="1221"    oy="0"   oz="838"   linkedscene="scene_3" autohotspot="true" 
+	allowed="scene_1|scene_2|scene_4"/>
+	
+	<style name="scene_4"  ox="1057"    oy="0"   oz="510"   linkedscene="scene_4" autohotspot="true" 
+	allowed="scene_3|scene_5|scene_2"/>
+	
+	<style name="scene_5"  ox="852"    oy="0"   oz="540"   linkedscene="scene_5" autohotspot="true" 
+	allowed="scene_2|scene_6|scene_7|scene_4"/>
+	
+	<style name="scene_6"  ox="616"    oy="0"   oz="577"   linkedscene="scene_6" autohotspot="true" 
+	allowed="scene_5|scene_7|scene_8|scene_9"/>
+	
+	<style name="scene_7"  ox="723"    oy="0"   oz="705"   linkedscene="scene_7" autohotspot="true" 
+	allowed="scene_6|scene_5"/>
+	
+	<style name="scene_8"  ox="578"    oy="0"   oz="408"   linkedscene="scene_8" autohotspot="true" 
+	allowed="scene_6|scene_9"/>
+	
+	<style name="scene_9"  ox="349"    oy="0"   oz="684"   linkedscene="scene_9" autohotspot="true" 
+	allowed="scene_8|scene_6"/>
+	
+	<scene name="scene_1pano_1hab_claro" title="1pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/1pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/1pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_1">
+			<cube url="panos/1pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/1depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_1">
+			<cube url="panos/1pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/1depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="223" ty="174" tz="-118" keep="false" visible="true" enabled="true" linkedscene="scene_3"/>
+	</scene>
+
+	<scene name="scene_2pano_1hab_claro" title="2pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/2pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/2pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_2">
+			<cube url="panos/2pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/2depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_2">
+			<cube url="panos/2pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/2depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="+211" ty="171" tz="+108.5" keep="false" visible="true" enabled="true" linkedscene="scene_3"/>
+		<hotspot name="spot2" style="visual_floorspot" tx="-24.5" ty="204" tz="211" keep="false" visible="true" enabled="true" linkedscene="scene_1"/>
+		<hotspot name="spot3" style="visual_floorspot" tx="-16.5" ty="214" tz="-173" keep="false" visible="true" enabled="true" linkedscene="scene_5"/>
+		<hotspot name="spot4" style="visual_floorspot" tx="113" ty="170" tz="-243.5" keep="false" visible="true" enabled="true" linkedscene="scene_4"/>
+		<hotspot name="spot5" style="visual_floorspot" tx="-174" ty="186" tz="-163.5" keep="false" visible="true" enabled="true" linkedscene="scene_6"/>
+	</scene>
+
+	<scene name="scene_3pano_1hab_claro" title="3pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/3pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/3pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_3">
+			<cube url="panos/3pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/3depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_3">
+			<cube url="panos/3pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/3depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="-269" ty="160" tz="102.5" keep="false" visible="true" enabled="true" linkedscene="scene_1"/>
+		<hotspot name="spot2" style="visual_floorspot" tx="-231" ty="189" tz="-41.5" keep="false" visible="true" enabled="true" linkedscene="scene_2"/>
+		
+		<hotspot name="spot3" style="visual_floorspot" tx="9.5" ty="132.5" tz="-323" keep="false" visible="true" enabled="true" linkedscene="scene_4"/>
+		
+	</scene>
+
+	<scene name="scene_4pano_1hab_claro" title="4pano_1hab_claro" onstart="infodisplay(1);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/4pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-16.759" vlookat="8.236" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/4pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_4">
+			<cube url="panos/4pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/4depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_4">
+			<cube url="panos/4pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/4depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="-113" ty="170" tz="+243.5" keep="false" visible="true" enabled="true" linkedscene="scene_2"/>
+		<hotspot name="spot2" style="visual_floorspot" tx="-158" ty="207" tz="+118.5" keep="false" visible="true" enabled="true" linkedscene="scene_5"/>
+		<hotspot name="spot3" style="visual_floorspot" tx="64.5" ty="147.5" tz="+301.5" keep="false" visible="true" enabled="true" linkedscene="scene_3"/>
+	</scene>
+
+	<scene name="scene_5pano_1hab_claro" title="5pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/5pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/5pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_5">
+			<cube url="panos/5pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/5depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_5">
+			<cube url="panos/5pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/5depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="+64" ty="202" tz="+201" keep="false" visible="true" enabled="true" linkedscene="scene_2"/>
+		<hotspot name="spot2" style="visual_floorspot" tx="200.5" ty="202" tz="-72.5" keep="false" visible="true" enabled="true" linkedscene="scene_4"/>
+		<hotspot name="spot3" style="visual_floorspot" tx="-161" ty="203" tz="130" keep="false" visible="true" enabled="true" linkedscene="scene_7"/>
+		<hotspot name="spot4" style="visual_floorspot" tx="-209.5" ty="198" tz="57.5" keep="false" visible="true" enabled="true" linkedscene="scene_6"/>
+		
+	</scene>
+
+	<scene name="scene_6pano_1hab_claro" title="6pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/6pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/6pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_6">
+			<cube url="panos/6pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/6depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_6">
+			<cube url="panos/6pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/6depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="+110" ty="229" tz="+115.5" keep="false" visible="true" enabled="true" linkedscene="scene_7"/>
+		<hotspot name="spot2" style="visual_floorspot" tx="257" ty="180.5" tz="0" keep="false" visible="true" enabled="true" linkedscene="scene_5"/>
+		<hotspot name="spot3" style="visual_floorspot" tx="-87" ty="198" tz="-148.5" keep="false" visible="true" enabled="true" linkedscene="scene_8"/>
+		<hotspot name="spot4" style="visual_floorspot" tx="-247" ty="182" tz="+66" keep="false" visible="true" enabled="true" linkedscene="scene_9"/>
+	</scene>
+
+	<scene name="scene_7pano_1hab_claro" title="7pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/7pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/7pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_7">
+			<cube url="panos/7pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/7depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_7">
+			<cube url="panos/7pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/7depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="-64" ty="229" tz="-138.5" keep="false" visible="true" enabled="true" linkedscene="scene_6"/>
+	</scene>
+
+	<scene name="scene_8pano_1hab_claro" title="8pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/8pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/8pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_8">
+			<cube url="panos/8pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/8depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_8">
+			<cube url="panos/8pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/8depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="+93" ty="198" tz="+170.5" keep="false" visible="true" enabled="true" linkedscene="scene_6"/>
+		<hotspot name="spot2" style="visual_floorspot" tx="-163" ty="173" tz="+216.5" keep="false" visible="true" enabled="true" linkedscene="scene_9"/>
+	</scene>
+
+	<scene name="scene_9pano_1hab_claro" title="9pano_1hab_claro" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/9pano_1hab_claro.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/9pano_1hab_claro.tiles/preview.jpg"/>
+
+		<image if="!(webvr.isenabled OR device.mobilevr)" style="scene_9">
+			<cube url="panos/9pano_1hab_claro.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,640,1280"/>
+		<depthmap url="depthmaps/9depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+
+		<image stereo="true" stereolabels="1|2" if="webvr.isenabled OR device.mobilevr" style="scene_9">
+			<cube url="panos/9pano_1hab_claro.tiles/vr/pano_%t_%s.jpg"/>
+		<depthmap url="depthmaps/9depth_1hab.png" enabled="true" scale="0.7" offset="0"/>
+		</image>
+		
+		<hotspot name="spot1" style="visual_floorspot" tx="+194" ty="161" tz="-195.5" keep="false" visible="true" enabled="true" linkedscene="scene_8"/>
+		<hotspot name="spot2" style="visual_floorspot" tx="+233" ty="183" tz="-69" keep="false" visible="true" enabled="true" linkedscene="scene_6"/>
+	</scene>
+	
+	
+	<include url="cambio_piso.xml" />
+	<include url="cambio_hab.xml" />
+
+</krpano>
